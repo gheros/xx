@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+<!--{% import "_macros.html" as macros %}-->
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<!--favicon.ico-->
+<!--<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+<!--<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js">-->
+{% endblock %}
+
+{% block title %}主机检测{% endblock %}
+
+{% block page_content %}
+
+<script>
+function open80(){
+  document.getElementById("stat").innerHTML="正在努力处理数据,请稍等,耐心等待约30秒"
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/host/host/80');
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+      var text=xhr.responseText;
+      text=eval(text);
+      var str="";
+        document.getElementById("tt").innerHTML=""
+      for (var i = 0; i < text.length; i++) {
+        document.getElementById("tt").innerHTML+="<tr><td>"+text[i][0]+"</td><td>"+text[i][1]+"</td><td>"+text[i][2]+"</td><td>"+text[i][3]+"</td><td>"+text[i][4]+"</td></tr>"
+      }
+      document.getElementById("stat").innerHTML="数据处理完成"
+
+                                    }
+              } ;
+  }
+
+  function open443(){
+    document.getElementById("stat").innerHTML="正在努力处理数据,请稍等,443端口处理较慢,请耐心等待约1分钟"
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/host/host/443');
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+      var text=xhr.responseText;
+      text=eval(text);
+      var str="";
+      document.getElementById("tt").innerHTML=""
+      for (var i = 0; i < text.length; i++) {
+        document.getElementById("tt").innerHTML+="<tr><td>"+text[i][0]+"</td><td>"+text[i][1]+"</td><td>"+text[i][2]+"</td><td>"+text[i][3]+"</td><td>"+text[i][4]+"</td></tr>"
+
+      }
+      document.getElementById("stat").innerHTML="数据处理完成"
+
+                                    }
+              } ;
+  }
+  function open(){
+    document.getElementById("stat").innerHTML="正在努力处理数据,请稍等,443端口处理较慢,请耐心等待约1分钟"
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/host/host/443');
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+      var text=xhr.responseText;
+      text=eval(text);
+      var str="";
+      document.getElementById("tt").innerHTML=""
+      for (var i = 0; i < text.length; i++) {
+        document.getElementById("tt").innerHTML+="<tr><td>"+text[i][0]+"</td><td>"+text[i][1]+"</td><td>"+text[i][2]+"</td><td>"+text[i][3]+"</td><td>"+text[i][4]+"</td></tr>"
+
+      }
+      document.getElementById("stat").innerHTML="数据处理完成"
+
+                                    }
+              } ;
+  }
+  function openall(){
+  document.getElementById("stat1").innerHTML="正在努力处理数据,请稍等"
+  var check=document.getElementById("check").value
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/host/checkhost/'+check);
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+      var text=xhr.responseText;
+      var str="";
+      document.getElementById("stat2").innerHTML=text
+      document.getElementById("stat1").innerHTML="数据处理完成"
+
+                                    }
+              } ;
+  }
+
+</script>
+
+<div id="ldiv1" class="div1 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+<table  class="table table-striped">
+      <thead>
+          <tr>
+              <th field="itemid" width="110">ID</th>
+              <th field="productid" width="110">名称</th>
+              <th field="listprice" width="110">代号</th>
+              <th field="listprice" width="110">解析</th>
+              <th field="listprice" width="110">状态</th>
+          </tr>
+      </thead>
+      <tbody id="tt" data-spy="scroll" style="height:200px;overflow:auto; position: relative;">
+        </tbody>
+  </table>
+  </div>
+<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+<button onclick="open80()">检测所有机器80端口</button>
+<button onclick="open443()">检测所有机器443端口</button>
+<p id='stat'></p>
+<p>单独检测请输入IP地址或域名,然后点击检测,可一起检测80与443端口<p>
+<p><input type="text" id="check"/></p>
+<button onclick="openall()">检测</button>
+<p id='stat1'></p>
+<p id="stat2"></p>
+
+<p>检测所有端口时查询较慢是因为调用了域名解析接口来进行匹配,第三方返回速度较慢造成</p>
+<p>小技巧:批量查询结束后,可直接搜索:Error,找到对应的机器</p>
+
+
+
+
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

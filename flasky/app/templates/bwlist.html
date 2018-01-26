@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <!--<style type="text/css">-->
+        <!--.important { color: #336699; }-->
+    <!--</style>-->
+<!--<script type="text/javascript" src="static/js/jquery.easyui.min.js"></script>-->
+<!--<script type="text/javascript" src="static/js/jquery.min.js"></script>-->
+<script>
+var name;
+var status;
+function opendiv(id){
+  status=0
+	name=id.id
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/blist/'+id.id);
+	xhr.send();
+	xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+    var text=xhr.responseText;
+    text=eval(text);
+    var str="";
+    for (var i = 0; i < text.length; i++) {
+      str+="<p>"+text[i]+"</p>"
+    }
+
+       document.getElementById("clist").innerHTML=str;
+       document.getElementById("clistitem").innerHTML="<b class='bl'>"+id.id+"黑名单</b>详细信息";
+       document.getElementById("choise").innerHTML="当前选中的为<b class='bl'>黑名单"+id.id+"</b>"
+       var div1=document.getElementById("black");
+       div1.style.display=block;
+       var div2=document.getElementById("white");
+       div2.style.display=none;
+                                  }
+            } ;
+}
+
+function openadd(){
+	var xhr1 = new XMLHttpRequest();
+  var ipadd=document.getElementById("ipadd").value;
+  // var name=document.getElementById
+  if (status==0){
+	xhr1.open('GET', '/addblist/'+name+'/'+ipadd);
+	xhr1.send();
+	xhr1.onreadystatechange = function(){
+    if( xhr1.readyState == 4 && xhr1.status == 200 ) {
+    var text=xhr1.responseText;
+       document.getElementById("stat").innerHTML=text;
+      //  document.getElementById("clistitem").innerHTML=id.id+"黑名单详细信息";
+
+                                  }
+            }
+            }
+  if(status==1){
+    // var name=document.getElementById
+  	xhr1.open('GET', '/addwlist/'+name+'/'+ipadd);
+  	xhr1.send();
+  	xhr1.onreadystatechange = function(){
+      if( xhr1.readyState == 4 && xhr1.status == 200 ) {
+      var text=xhr1.responseText;
+         document.getElementById("stat").innerHTML=text;
+        //  document.getElementById("clistitem").innerHTML=id.id+"黑名单详细信息";
+
+                                    }
+              }
+
+  }
+reful()
+}
+function opendel(){
+	var xhr1 = new XMLHttpRequest();
+  var ipadd=document.getElementById("ipadd").value;
+  // var name=document.getElementById
+	if (status==0){xhr1.open('GET', '/delblist/'+name+'/'+ipadd);}
+  if (status==1){xhr1.open('GET', '/delwlist/'+name+'/'+ipadd);}
+	xhr1.send();
+	xhr1.onreadystatechange = function(){
+    if( xhr1.readyState == 4 && xhr1.status == 200 ) {
+    var text=xhr1.responseText;
+    for (var i = 0; i < text.length; i++) {
+    }
+       document.getElementById("stat").innerHTML=text;
+      //  document.getElementById("clistitem").innerHTML=id.id+"黑名单详细信息";
+                                  }
+            }
+            reful()
+
+}
+// 白名单
+function openwdiv(id){
+  status=1
+	name=id.id
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/wlist/'+id.id);
+	xhr.send();
+	xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+    var text=xhr.responseText;
+    text=eval(text);
+    var str="";
+    for (var i = 0; i < text.length; i++) {
+      str+="<p>"+text[i]+"</p>"
+    }
+
+       document.getElementById("clist").innerHTML=str;
+       document.getElementById("clistitem").innerHTML="<b class='wl'>"+id.id+"白名单</b>详细信息";
+       document.getElementById("choise").innerHTML="当前选中的为<b class='wl'>白名单"+id.id+"</b>"
+
+
+                                  }
+            } ;
+}
+function reful(){
+
+  var xhr = new XMLHttpRequest();
+  if (status==0) {xhr.open('GET', '/blist/'+name);
+   var text1="<b class='bl'>"+name+"黑名单</b>详细信息";
+    var text2="当前选中的为<b class='bl'>黑名单"+name+"</b>"
+  }
+  if (status==1) {xhr.open('GET', '/wlist/'+name);
+  var text1="<b class='wl'>"+name+"白名单</b>详细信息";
+   var text2="当前选中的为<b class='wl'>白名单"+name+"</b>"
+}
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+    var text=xhr.responseText;
+    text=eval(text);
+    var str="";
+    for (var i = 0; i < text.length; i++) {
+      str+="<p>"+text[i]+"</p>"
+    }
+
+       document.getElementById("clist").innerHTML=str;
+       document.getElementById("clistitem").innerHTML=text1;
+       document.getElementById("choise").innerHTML=text2
+
+                                  }
+            } ;
+
+
+}
+//
+// function openwadd(){
+//
+// }
+// function openwdel(){
+// 	var xhr1 = new XMLHttpRequest();
+//   var ipwadd=document.getElementById("ipwadd").value;
+//   // var name=document.getElementById
+// 	xhr1.open('GET', '/delwlist/'+name+'/'+ipwadd);
+// 	xhr1.send();
+// 	xhr1.onreadystatechange = function(){
+//     if( xhr1.readyState == 4 && xhr1.status == 200 ) {
+//     var text=xhr1.responseText;
+//     for (var i = 0; i < text.length; i++) {
+//     }
+//        document.getElementById("wstat").innerHTML=text;
+//       //  document.getElementById("clistitem").innerHTML=id.id+"黑名单详细信息";
+//                                   }
+//             }
+// }
+
+
+
+</script>
+
+{% endblock %}s
+{% block mtext %}
+
+    <h2 class="sub-header">现金网信息</h1>
+
+
+        <!--<div id="dataShow" style="width:500px;margin:0 auto;">-->
+		<!--<table class="table" id="table"></table>-->
+	<!--</div>-->
+
+
+<!--  -->
+<div class="table-responsive">
+<table  class="table table-striped">
+      <thead>
+          <tr>
+              <th field="itemid" width="110">ID</th>
+              <th field="productid" width="110">名称</th>
+              <th field="listprice" width="110">域名</th>
+              <th field="listprice" width="110">黑名单</th>
+              <th field="listprice" width="110">白名单</th>
+          </tr>
+      </thead>
+      <tbody id="tt" class="pre-scrollable">
+        </tbody>
+  </table>
+  </div>
+<script>
+var array={{cname|safe}}
+for (var i = 0; i < array.length; i++) {
+  array[i]
+  document.getElementById("tt").innerHTML+="<tr><td>"+array[i][0]+"</td><td>"+array[i][1]+"</td><td>"+array[i][2]+"</td><td><a id="+array[i][0]+" onclick='opendiv(this)' >编辑黑名单</a></td><td><a id="+array[i][0]+" onclick='openwdiv(this)'>编辑白名单</a></td></tr>";
+}
+
+</script>
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block rtext %}
+<h3 id="clistitem">详细信息</h3>
+<div id="clist" class="divlist-1"></div>
+{% endblock %}
+
+
+{% block cip %}
+
+    <!--<p class="important">-->
+{{scan}}
+<div id="black">
+<p id="choise">当前选中的为</p>
+<p>请输入IP地址<input type="text" id="ipadd"/></p>
+<p><button onclick="openadd()">增加</button><button onclick="opendel()" >删除</button><b id="stat"></b></p>
+
+<!-- <p>说明:点击编辑黑名单或者编辑白名单，则会自动找到对应的黑名单或白名单的值，再输入栏输入对应的IP地址以及通配符</p>
+<p>    例如192.168.1.1 点击增加即可，删除也是一样</p>
+<p>    如要增加一段IP，输入192.168.1.0/24 点击增加即可，则代表增加192.168.1.(0——255)整段</p>
+<p>    添加或者删除前，请认真核对是黑名单或白名单</p>
+<p>    点击没切换到对应ID的黑白名单，说明该黑名单或白名单文件不存在，需联系技术人员添加</p>
+<p><button onclick="submit()">更新到服务器</button></p>
+<p>说明:更新到服务器，将修改完毕的黑白名单做一次更新，并更新到全部服务器</p> -->
+</div>
+
+{% endblock %}
+<!-- {% block blacklist1 %}
+
+{% endblock %} -->

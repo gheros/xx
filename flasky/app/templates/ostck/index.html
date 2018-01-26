@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+<!--{% import "_macros.html" as macros %}-->
+
+{% block title %}Lebo黑白名单{% endblock %}
+
+{% block page_content %}
+
+<div id="ldiv1" class="div1 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+    <h1>这里计划显示主机情况</h1>
+<table  class="table table-striped">
+      <thead>
+          <tr>
+              <th field="itemid" width="110">ID</th>
+              <th field="productid" width="110">主机</th>
+              <th field="listprice" width="110">name</th>
+              <th field="listprice" width="110">??</th>
+              <th field="listprice" width="110">??</th>
+              <th field="listprice" width="110">??</th>
+          </tr>
+      </thead>
+      <tbody id="tt" data-spy="scroll" style="height:200px;overflow:auto; position: relative;">
+        </tbody>
+  </table>
+  </div>
+<script>
+
+
+</script>
+
+
+
+
+<div id="black"class="div3 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+    <h1>创建主机</h1>
+<p>请输入需要创建的IP地址<input type="text" id="ipadd"/></p>
+<select id="type">
+<option value="0">1类型</option>
+<option value="1">2类型</option>
+</select>
+    <br/>
+<input type="checkbox" name="checkbox" id="checkbox" value="1" onclick="checkbox1()">可选选项<br/>
+
+
+
+<div id="clist" style="display:none">
+<p>外网IP<input type="text" id="wip"/></p>
+<p>硬盘大小<input type="text" id="disk"/></p>
+<p>说明:外网ip为机器需要绑定的外网ip</p>
+<p>说明:硬盘大小为挂载硬盘的大小,单位为G</p>
+
+</div>
+<p><button onclick="create()">创建</button><b id="stat"></b></p>
+    <div>
+        <p>创建状态</p>
+    </div>
+</div>
+
+<script>
+function checkbox1()
+{var che=document.getElementById("checkbox");
+var div=document.getElementById("clist");
+var wip=document.getElementById("wip");
+var disk=document.getElementById("disk");
+var chetxt=document.getElementById("chetxt");
+if (che.checked==true)
+  {div.style.display='block';
+  // chetxt.innerHTML='关闭可选选项';
+
+  }
+else {
+  div.style.display='none';
+  wip.value='';
+  disk.value='';
+  // chetxt.innerHTML='显示可选选项';
+  // alert('11');
+}
+
+
+}
+function create(){
+
+	var ip=document.getElementById("ipadd");
+  var type=document.getElementById("type");
+  var index=type.selectedIndex;
+  var wip=document.getElementById("wip");
+  var disk=document.getElementById("disk");
+  alert(ip.value);
+  alert(type.options[index].value);
+  alert(wip.value);
+  alert(disk.value);
+  alert()
+
+
+
+	var xhr = new XMLHttpRequest();
+
+	xhr.open('GET', '/ostck/ostck/'+ip.value+'&'+type.options[index].value+'&'+wip.value+'&'+disk.value);
+
+	xhr.send();
+
+	xhr.onreadystatechange = function(){
+
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+
+    var text=xhr.responseText;
+
+    text=eval(text);
+
+    var str="";
+
+    for (var i = 0; i < text.length; i++) {
+
+      str+="<p>"+text[i]+"</p>"
+
+    }
+
+
+
+       document.getElementById("clist").innerHTML=str;
+
+       document.getElementById("clistitem").innerHTML=id.id+"黑名单详细信息";
+
+       document.getElementById("choise").innerHTML="当前选中的为黑名单"+id.id
+
+                                  }
+
+            } ;
+
+}
+
+
+
+</script>
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

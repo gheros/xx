@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+<!--{% import "_macros.html" as macros %}-->
+
+{% block title %}Lebo80域名{% endblock %}
+
+{% block page_content %}
+<script>
+var array={{cname|safe}}
+var name;
+var status;
+function opendiv(id){
+  status=0
+	name=id.id
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/domain/docat/'+id.id);
+	xhr.send();
+	xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+    var text=xhr.responseText;
+    text=eval(text);
+    var str="";
+    for (var i = 0; i < text.length; i++) {
+      str+="<p>"+text[i]+"</p>"
+    }
+
+       document.getElementById("clist").innerHTML=str;
+       document.getElementById("clistitem").innerHTML="<b class='bl'>"+id.id+"当前域名</b>详细信息,统计为"+text.length+"个";
+       document.getElementById("choise").innerHTML="当前选中的<b class='bl'>域名ID为"+id.id+"</b>"
+                                  }
+            } ;
+}
+function check(){
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/domain/docheck/'+name+'/'+document.getElementById("ipadd").value);
+	xhr.send();
+	xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+    var text=xhr.responseText;
+    document.getElementById("stat").innerHTML=text;
+                                  }
+            } ;
+}
+function openadd(){
+    document.getElementById("add").disabled=false;
+    document.getElementById("stat").innerHTML="正在加载结果，请耐心等待"
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/domain/doinsert/'+name+'/'+document.getElementById("ipadd").value);
+	xhr.send();
+	xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+    var text=xhr.responseText;
+    document.getElementById("stat").innerHTML=text;
+    document.getElementByIdx("add").disabled=true;
+
+                                  }
+            } ;
+            reful()
+}
+function opendel(){
+  document.getElementById("del").disabled=false;
+  document.getElementById("stat").innerHTML="正在加载结果，请耐心等待"
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/domain/dodelete/'+name+'/'+document.getElementById("ipadd").value);
+	xhr.send();
+	xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+    var text=xhr.responseText;
+    document.getElementById("stat").innerHTML=text;
+    document.getElementByIdx("del").disabled=true;
+                                  }
+            } ;
+            reful()
+}
+
+function reful(){
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/domain/docat/'+name);
+  var text1="<b class='bl'>"+name+"黑名单</b>详细信息";
+  var text2="当前选中的为<b class='bl'>黑名单"+name+"</b>"
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+      var text=xhr.responseText;
+      text=eval(text);
+      var str="";
+      for (var i = 0; i < text.length; i++) {
+        str+="<p>"+text[i]+"</p>"
+      }
+
+         document.getElementById("clist").innerHTML=str;
+         document.getElementById("clistitem").innerHTML="<b class='bl'>"+id.id+"当前域名</b>详细信息,统计为"+text.length+"个";
+         document.getElementById("choise").innerHTML="当前选中的<b class='bl'>域名ID为"+id.id+"</b>"
+                                    }
+              } ;
+  }
+</script>
+
+<div id="ldiv1" class="div1 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+<table  class="table table-striped">
+      <thead>
+          <tr>
+              <th field="itemid" width="110">ID</th>
+              <th field="productid" width="110">名称</th>
+              <th field="listprice" width="110">代号</th>
+              <th field="listprice" width="110">功能</th>
+          </tr>
+      </thead>
+      <tbody id="tt" data-spy="scroll" style="height:200px;overflow:auto; position: relative;">
+        </tbody>
+  </table>
+  </div>
+<script>
+
+for (var i = 0; i < array.length; i++) {
+  array[i]
+  document.getElementById("tt").innerHTML+="<tr><td>"+array[i][0]+"</td><td>"+array[i][1]+"</td><td>"+array[i][2]+"</td><td><a id="+array[i][0]+" onclick='opendiv(this)' >编辑域名</a></td></tr>";
+}
+
+</script>
+
+
+
+
+<div id="black"class="div3 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+<p id="choise">当前选中的为</p>
+<p>请输入域名<input type="text" id="ipadd"/></p>
+    <p><button id="check" onclick="check()">查询该域名是否正常</button><button id="add" onclick="openadd()">增加域名</button><button id="del" onclick="opendel()">删除域名</button></p>
+    <p><b id="stat"></b></p>
+    <h3 id="clistitem">详细信息</h3>
+<div id="clist" class="div2 col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

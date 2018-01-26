@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+<!--{% import "_macros.html" as macros %}-->
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<!--favicon.ico-->
+<!--<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+<!--<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js">-->
+{% endblock %}
+
+{% block title %}主机检测{% endblock %}
+
+{% block page_content %}
+
+<script>
+  function open(i){
+  document.getElementById("stat").innerHTML="正在努力处理数据,请稍等"
+  var check=document.getElementById("check").value
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/host/scan/'+check+'/'+i);
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    if( xhr.readyState == 4 && xhr.status == 200 ) {
+      var text=xhr.responseText;
+      var str="";
+      document.getElementById("div1").innerHTML+='<p>'+text+'</p>'
+
+      }
+      document.getElementById("stat").innerHTML="数据处理完成"
+
+                                    }
+  }
+  function openall()
+  {
+    var port1=document.getElementById("port1").value
+    var port2=document.getElementById("port2").value
+  for (var i = port1; i <= port2; i++) {
+    open(i)
+  }
+}
+function clearscan()
+{
+  document.getElementById("div1").innerHTML=''
+  document.getElementById("stat").innerHTML='数据清理完毕'
+}
+
+</script>
+
+<div id="ldiv1" class="div1 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+  <h1>扫描端口以及排查机器漏洞功能</h1>
+  <p>说明:提供简单的端口漏洞端口扫描,也可检测主机是否有安全漏洞</p>
+  <p>请输入IP地址或域名<input type="text" id="check"/></p>
+  <p>请输入起始端口号<input type="text" id="port1"/></p>
+  <p>请输入结束端口号<input type="text" id="port2"/></p>
+  <button onclick="openall()">扫描端口</button>
+  <button onclick="clearscan()">清空信息</button>
+  <p id="stat"></p>
+  <div id="div1">
+  </div>
+  </div>
+<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+  <h1>使用说明</h1>
+<p>常用http软件端口为80端口,80端口正常,即可以用http访问,说明网络链接正常</p>
+<p>443为ssl加密带证书的端口,443端口正常,即可以用https加密访问,说明网络链接正常</p>
+<p>如果只单独检测某个端口,只需用将起始端口与结束端口填为一个端口即可</p>
+<p>一般情况,正常提供服务的端口需要正常,不做服务的端口,需要保持不正常的状态,避免被黑客攻击</p>
+<p>例如正常情况下,提供web服务的,只用检测80,若带证书,检测443即可</p>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
